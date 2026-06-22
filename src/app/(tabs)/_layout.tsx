@@ -1,23 +1,44 @@
 // ============================================================
 // TAB LAYOUT  (src/app/(tabs)/_layout.tsx)
 //
-// This sets up the TWO bottom tabs:
-//   Tab 1 → index.tsx     = Unpaid Laundry
-//   Tab 2 → unclaimed.tsx = Unclaimed Laundry
-//
-// The header at the top is also configured here.
+// Sets up the two bottom tabs.
+// The ☰ menu button now opens an action sheet with options:
+//   - History  → navigates to /history
+//   - About    → navigates to /about
 // ============================================================
 
-import { Tabs, router } from 'expo-router';
-import { TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../../constants/theme';
+import { Ionicons } from "@expo/vector-icons";
+import { Tabs, router } from "expo-router";
+import { Alert, TouchableOpacity } from "react-native";
+import { colors } from "../../constants/theme";
+
+// Called when the ☰ menu button is pressed
+function openMenu() {
+  Alert.alert(
+    "Menu",
+    "",
+    [
+      {
+        text: "📋  History",
+        onPress: () => router.push("/history"),
+      },
+      {
+        text: "ℹ️  About",
+        onPress: () => router.push("/about"),
+      },
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+    ],
+    { cancelable: true },
+  );
+}
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        // --- Bottom tab bar styling ---
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: {
@@ -29,18 +50,15 @@ export default function TabLayout() {
         },
         tabBarLabelStyle: {
           fontSize: 12,
-          fontWeight: '600',
+          fontWeight: "600",
         },
-
-        // --- Header (top bar) styling ---
         headerStyle: { backgroundColor: colors.primary },
         headerTintColor: colors.white,
-        headerTitleStyle: { fontWeight: '700', fontSize: 17 },
-
-        // The ☰ menu button on the top right
+        headerTitleStyle: { fontWeight: "700", fontSize: 17 },
+        // ☰ menu button — shown on every tab's header
         headerRight: () => (
           <TouchableOpacity
-            onPress={() => router.push('/about')}
+            onPress={openMenu}
             style={{ marginRight: 16 }}
             accessibilityLabel="Open menu"
           >
@@ -49,22 +67,19 @@ export default function TabLayout() {
         ),
       }}
     >
-      {/* -------- TAB 1: Unpaid Laundry -------- */}
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Unpaid Laundry',
+          title: "Unpaid Laundry",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="wallet-outline" size={size} color={color} />
           ),
         }}
       />
-
-      {/* -------- TAB 2: Unclaimed Laundry -------- */}
       <Tabs.Screen
         name="unclaimed"
         options={{
-          title: 'Unclaimed Laundry',
+          title: "Unclaimed Laundry",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="shirt-outline" size={size} color={color} />
           ),
